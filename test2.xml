@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.60 scan initiated Thu Sep 10 12:32:08 2020 as: nmap -p 22,53,80,443 -sV -oX test2.xml 8.8.8.8 87.250.250.242 -->
+<nmaprun scanner="nmap" args="nmap -p 22,53,80,443 -sV -oX test2.xml 8.8.8.8 87.250.250.242" start="1599730328" startstr="Thu Sep 10 12:32:08 2020" version="7.60" xmloutputversion="1.04">
+<scaninfo type="connect" protocol="tcp" numservices="4" services="22,53,80,443"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1599730328" endtime="1599730489"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="8.8.8.8" addrtype="ipv4"/>
+<hostnames>
+<hostname name="dns.google" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="tcpwrapped" method="probed" conf="8"/></port>
+<port protocol="tcp" portid="80"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" product="sffe" servicefp="SF-Port443-TCP:V=7.60%T=SSL%I=7%D=9/10%Time=5F59F2A6%P=x86_64-pc-linux-gnu%r(GetRequest,7C0,&quot;HTTP/1\.0\x20404\x20Not\x20Found\r\nContent-Type:\x20text/html;\x20charset=UTF-8\r\nX-Content-Type-Options:\x20nosniff\r\nDate:\x20Thu,\x2010\x20Sep\x202020\x2009:32:20\x20GMT\r\nServer:\x20sffe\r\nContent-Length:\x201561\r\nX-XSS-Protection:\x200\r\nAlt-Svc:\x20h3-29=\&quot;:443\&quot;;\x20ma=2592000,h3-27=\&quot;:443\&quot;;\x20ma=2592000,h3-T051=\&quot;:443\&quot;;\x20ma=2592000,h3-T050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q046=\&quot;:443\&quot;;\x20ma=2592000,h3-Q043=\&quot;:443\&quot;;\x20ma=2592000,quic=\&quot;:443\&quot;;\x20ma=2592000;\x20v=\&quot;46,43\&quot;\r\n\r\n&lt;!DOCTYPE\x20html&gt;\n&lt;html\x20lang=en&gt;\n\x20\x20&lt;meta\x20charset=utf-8&gt;\n\x20\x20&lt;meta\x20name=viewport\x20content=\&quot;initial-scale=1,\x20minimum-scale=1,\x20width=device-width\&quot;&gt;\n\x20\x20&lt;title&gt;Error\x20404\x20\(Not\x20Found\)!!1&lt;/title&gt;\n\x20\x20&lt;style&gt;\n\x20\x20\x20\x20\*{margin:0;padding:0}html,code{font:15px/22px\x20arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7%\x20auto\x200;max-width:390px;min-height:180px;padding:30px\x200\x2015px}\*\x20&gt;\x20body{background:url\(//www\.google\.com/images/errors/robot\.png\)\x20100%\x205px\x20no-repeat;padding-right&quot;)%r(HTTPOptions,7C0,&quot;HTTP/1\.0\x20404\x20Not\x20Found\r\nContent-Type:\x20text/html;\x20charset=UTF-8\r\nX-Content-Type-Options:\x20nosniff\r\nDate:\x20Thu,\x2010\x20Sep\x202020\x2009:32:21\x20GMT\r\nServer:\x20sffe\r\nContent-Length:\x201561\r\nX-XSS-Protection:\x200\r\nAlt-Svc:\x20h3-29=\&quot;:443\&quot;;\x20ma=2592000,h3-27=\&quot;:443\&quot;;\x20ma=2592000,h3-T051=\&quot;:443\&quot;;\x20ma=2592000,h3-T050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q046=\&quot;:443\&quot;;\x20ma=2592000,h3-Q043=\&quot;:443\&quot;;\x20ma=2592000,quic=\&quot;:443\&quot;;\x20ma=2592000;\x20v=\&quot;46,43\&quot;\r\n\r\n&lt;!DOCTYPE\x20html&gt;\n&lt;html\x20lang=en&gt;\n\x20\x20&lt;meta\x20charset=utf-8&gt;\n\x20\x20&lt;meta\x20name=viewport\x20content=\&quot;initial-scale=1,\x20minimum-scale=1,\x20width=device-width\&quot;&gt;\n\x20\x20&lt;title&gt;Error\x20404\x20\(Not\x20Found\)!!1&lt;/title&gt;\n\x20\x20&lt;style&gt;\n\x20\x20\x20\x20\*{margin:0;padding:0}html,code{font:15px/22px\x20arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7%\x20auto\x200;max-width:390px;min-height:180px;padding:30px\x200\x2015px}\*\x20&gt;\x20body{background:url\(//www\.google\.com/images/errors/robot\.png\)\x20100%\x205px\x20no-repeat;padding-right&quot;);" tunnel="ssl" method="probed" conf="10"/></port>
+</ports>
+<times srtt="21862" rttvar="13404" to="100000"/>
+</host>
+<host starttime="1599730328" endtime="1599730489"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="87.250.250.242" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ya.ru" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="domain" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" servicefp="SF-Port80-TCP:V=7.60%I=7%D=9/10%Time=5F59F2A0%P=x86_64-pc-linux-gnu%r(GetRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(HTTPOptions,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(RTSPRequest,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;)%r(FourOhFourRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(SIPOptions,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;);" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" servicefp="SF-Port443-TCP:V=7.60%T=SSL%I=7%D=9/10%Time=5F59F2AB%P=x86_64-pc-linux-gnu%r(GetRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(HTTPOptions,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(FourOhFourRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(RTSPRequest,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;)%r(SIPOptions,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;);" tunnel="ssl" method="probed" conf="10"/></port>
+</ports>
+<times srtt="9430" rttvar="6455" to="100000"/>
+</host>
+<runstats><finished time="1599730489" timestr="Thu Sep 10 12:34:49 2020" elapsed="161.82" summary="Nmap done at Thu Sep 10 12:34:49 2020; 2 IP addresses (2 hosts up) scanned in 161.82 seconds" exit="success"/><hosts up="2" down="0" total="2"/>
+</runstats>
+</nmaprun>

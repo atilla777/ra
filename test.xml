@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.60 scan initiated Thu Sep 10 12:20:40 2020 as: nmap -p 22,53,80,443 -oX test.xml 8.8.8.8 87.250.250.242 -->
+<nmaprun scanner="nmap" args="nmap -p 22,53,80,443 -oX test.xml 8.8.8.8 87.250.250.242" start="1599729640" startstr="Thu Sep 10 12:20:40 2020" version="7.60" xmloutputversion="1.04">
+<scaninfo type="connect" protocol="tcp" numservices="4" services="22,53,80,443"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1599729640" endtime="1599729641"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="8.8.8.8" addrtype="ipv4"/>
+<hostnames>
+<hostname name="dns.google" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="domain" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="22127" rttvar="12552" to="100000"/>
+</host>
+<host starttime="1599729640" endtime="1599729641"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="87.250.250.242" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ya.ru" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="domain" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="10670" rttvar="6372" to="100000"/>
+</host>
+<runstats><finished time="1599729641" timestr="Thu Sep 10 12:20:41 2020" elapsed="1.38" summary="Nmap done at Thu Sep 10 12:20:41 2020; 2 IP addresses (2 hosts up) scanned in 1.38 seconds" exit="success"/><hosts up="2" down="0" total="2"/>
+</runstats>
+</nmaprun>

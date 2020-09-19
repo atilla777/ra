@@ -1,0 +1,14 @@
+ra:
+  host: 127.0.0.1
+  port: 1323
+  secret: secret
+  sqlite: sqlite.db
+  workers:
+    queue: 25
+    count: 5
+    attempts: 3
+    tick: 5
+rism:
+  host: 127.0.0.1
+  port: 3000
+  protocol: http

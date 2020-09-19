@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.60 scan initiated Thu Sep 10 14:04:21 2020 as: nmap -p 22,53,80,443 -&#45;script ssl-enum-ciphers -sV -O -oX test3.xml 8.8.8.8 87.250.250.242 -->
+<nmaprun scanner="nmap" args="nmap -p 22,53,80,443 -&#45;script ssl-enum-ciphers -sV -O -oX test3.xml 8.8.8.8 87.250.250.242" start="1599735861" startstr="Thu Sep 10 14:04:21 2020" version="7.60" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="4" services="22,53,80,443"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1599735861" endtime="1599736044"><status state="up" reason="reset" reason_ttl="255"/>
+<address addr="8.8.8.8" addrtype="ipv4"/>
+<hostnames>
+<hostname name="dns.google" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="tcpwrapped" method="probed" conf="8"/></port>
+<port protocol="tcp" portid="80"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="https" product="sffe" servicefp="SF-Port443-TCP:V=7.60%T=SSL%I=7%D=9/10%Time=5F5A0844%P=x86_64-pc-linux-gnu%r(GetRequest,7C0,&quot;HTTP/1\.0\x20404\x20Not\x20Found\r\nContent-Type:\x20text/html;\x20charset=UTF-8\r\nX-Content-Type-Options:\x20nosniff\r\nDate:\x20Thu,\x2010\x20Sep\x202020\x2011:04:35\x20GMT\r\nServer:\x20sffe\r\nContent-Length:\x201561\r\nX-XSS-Protection:\x200\r\nAlt-Svc:\x20h3-29=\&quot;:443\&quot;;\x20ma=2592000,h3-27=\&quot;:443\&quot;;\x20ma=2592000,h3-T051=\&quot;:443\&quot;;\x20ma=2592000,h3-T050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q046=\&quot;:443\&quot;;\x20ma=2592000,h3-Q043=\&quot;:443\&quot;;\x20ma=2592000,quic=\&quot;:443\&quot;;\x20ma=2592000;\x20v=\&quot;46,43\&quot;\r\n\r\n&lt;!DOCTYPE\x20html&gt;\n&lt;html\x20lang=en&gt;\n\x20\x20&lt;meta\x20charset=utf-8&gt;\n\x20\x20&lt;meta\x20name=viewport\x20content=\&quot;initial-scale=1,\x20minimum-scale=1,\x20width=device-width\&quot;&gt;\n\x20\x20&lt;title&gt;Error\x20404\x20\(Not\x20Found\)!!1&lt;/title&gt;\n\x20\x20&lt;style&gt;\n\x20\x20\x20\x20\*{margin:0;padding:0}html,code{font:15px/22px\x20arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7%\x20auto\x200;max-width:390px;min-height:180px;padding:30px\x200\x2015px}\*\x20&gt;\x20body{background:url\(//www\.google\.com/images/errors/robot\.png\)\x20100%\x205px\x20no-repeat;padding-right&quot;)%r(HTTPOptions,7C0,&quot;HTTP/1\.0\x20404\x20Not\x20Found\r\nContent-Type:\x20text/html;\x20charset=UTF-8\r\nX-Content-Type-Options:\x20nosniff\r\nDate:\x20Thu,\x2010\x20Sep\x202020\x2011:04:36\x20GMT\r\nServer:\x20sffe\r\nContent-Length:\x201561\r\nX-XSS-Protection:\x200\r\nAlt-Svc:\x20h3-29=\&quot;:443\&quot;;\x20ma=2592000,h3-27=\&quot;:443\&quot;;\x20ma=2592000,h3-T051=\&quot;:443\&quot;;\x20ma=2592000,h3-T050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q050=\&quot;:443\&quot;;\x20ma=2592000,h3-Q046=\&quot;:443\&quot;;\x20ma=2592000,h3-Q043=\&quot;:443\&quot;;\x20ma=2592000,quic=\&quot;:443\&quot;;\x20ma=2592000;\x20v=\&quot;46,43\&quot;\r\n\r\n&lt;!DOCTYPE\x20html&gt;\n&lt;html\x20lang=en&gt;\n\x20\x20&lt;meta\x20charset=utf-8&gt;\n\x20\x20&lt;meta\x20name=viewport\x20content=\&quot;initial-scale=1,\x20minimum-scale=1,\x20width=device-width\&quot;&gt;\n\x20\x20&lt;title&gt;Error\x20404\x20\(Not\x20Found\)!!1&lt;/title&gt;\n\x20\x20&lt;style&gt;\n\x20\x20\x20\x20\*{margin:0;padding:0}html,code{font:15px/22px\x20arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7%\x20auto\x200;max-width:390px;min-height:180px;padding:30px\x200\x2015px}\*\x20&gt;\x20body{background:url\(//www\.google\.com/images/errors/robot\.png\)\x20100%\x205px\x20no-repeat;padding-right&quot;);" tunnel="ssl" method="probed" conf="10"/><script id="fingerprint-strings" output="&#xa;  GetRequest: &#xa;    HTTP/1.0 404 Not Found&#xa;    Content-Type: text/html; charset=UTF-8&#xa;    X-Content-Type-Options: nosniff&#xa;    Date: Thu, 10 Sep 2020 11:04:35 GMT&#xa;    Server: sffe&#xa;    Content-Length: 1561&#xa;    X-XSS-Protection: 0&#xa;    Alt-Svc: h3-29=&quot;:443&quot;; ma=2592000,h3-27=&quot;:443&quot;; ma=2592000,h3-T051=&quot;:443&quot;; ma=2592000,h3-T050=&quot;:443&quot;; ma=2592000,h3-Q050=&quot;:443&quot;; ma=2592000,h3-Q046=&quot;:443&quot;; ma=2592000,h3-Q043=&quot;:443&quot;; ma=2592000,quic=&quot;:443&quot;; ma=2592000; v=&quot;46,43&quot;&#xa;    &lt;!DOCTYPE html&gt;&#xa;    &lt;html lang=en&gt;&#xa;    &lt;meta charset=utf-8&gt;&#xa;    &lt;meta name=viewport content=&quot;initial-scale=1, minimum-scale=1, width=device-width&quot;&gt;&#xa;    &lt;title&gt;Error 404 (Not Found)!!1&lt;/title&gt;&#xa;    &lt;style&gt;&#xa;    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* &gt; body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right&#xa;  HTTPOptions: &#xa;    HTTP/1.0 404 Not Found&#xa;    Content-Type: text/html; charset=UTF-8&#xa;    X-Content-Type-Options: nosniff&#xa;    Date: Thu, 10 Sep 2020 11:04:36 GMT&#xa;    Server: sffe&#xa;    Content-Length: 1561&#xa;    X-XSS-Protection: 0&#xa;    Alt-Svc: h3-29=&quot;:443&quot;; ma=2592000,h3-27=&quot;:443&quot;; ma=2592000,h3-T051=&quot;:443&quot;; ma=2592000,h3-T050=&quot;:443&quot;; ma=2592000,h3-Q050=&quot;:443&quot;; ma=2592000,h3-Q046=&quot;:443&quot;; ma=2592000,h3-Q043=&quot;:443&quot;; ma=2592000,quic=&quot;:443&quot;; ma=2592000; v=&quot;46,43&quot;&#xa;    &lt;!DOCTYPE html&gt;&#xa;    &lt;html lang=en&gt;&#xa;    &lt;meta charset=utf-8&gt;&#xa;    &lt;meta name=viewport content=&quot;initial-scale=1, minimum-scale=1, width=device-width&quot;&gt;&#xa;    &lt;title&gt;Error 404 (Not Found)!!1&lt;/title&gt;&#xa;    &lt;style&gt;&#xa;    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* &gt; body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right"><elem key="GetRequest">&#xa;    HTTP/1.0 404 Not Found&#xa;    Content-Type: text/html; charset=UTF-8&#xa;    X-Content-Type-Options: nosniff&#xa;    Date: Thu, 10 Sep 2020 11:04:35 GMT&#xa;    Server: sffe&#xa;    Content-Length: 1561&#xa;    X-XSS-Protection: 0&#xa;    Alt-Svc: h3-29=&quot;:443&quot;; ma=2592000,h3-27=&quot;:443&quot;; ma=2592000,h3-T051=&quot;:443&quot;; ma=2592000,h3-T050=&quot;:443&quot;; ma=2592000,h3-Q050=&quot;:443&quot;; ma=2592000,h3-Q046=&quot;:443&quot;; ma=2592000,h3-Q043=&quot;:443&quot;; ma=2592000,quic=&quot;:443&quot;; ma=2592000; v=&quot;46,43&quot;&#xa;    &lt;!DOCTYPE html&gt;&#xa;    &lt;html lang=en&gt;&#xa;    &lt;meta charset=utf-8&gt;&#xa;    &lt;meta name=viewport content=&quot;initial-scale=1, minimum-scale=1, width=device-width&quot;&gt;&#xa;    &lt;title&gt;Error 404 (Not Found)!!1&lt;/title&gt;&#xa;    &lt;style&gt;&#xa;    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* &gt; body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right</elem>
+<elem key="HTTPOptions">&#xa;    HTTP/1.0 404 Not Found&#xa;    Content-Type: text/html; charset=UTF-8&#xa;    X-Content-Type-Options: nosniff&#xa;    Date: Thu, 10 Sep 2020 11:04:36 GMT&#xa;    Server: sffe&#xa;    Content-Length: 1561&#xa;    X-XSS-Protection: 0&#xa;    Alt-Svc: h3-29=&quot;:443&quot;; ma=2592000,h3-27=&quot;:443&quot;; ma=2592000,h3-T051=&quot;:443&quot;; ma=2592000,h3-T050=&quot;:443&quot;; ma=2592000,h3-Q050=&quot;:443&quot;; ma=2592000,h3-Q046=&quot;:443&quot;; ma=2592000,h3-Q043=&quot;:443&quot;; ma=2592000,quic=&quot;:443&quot;; ma=2592000; v=&quot;46,43&quot;&#xa;    &lt;!DOCTYPE html&gt;&#xa;    &lt;html lang=en&gt;&#xa;    &lt;meta charset=utf-8&gt;&#xa;    &lt;meta name=viewport content=&quot;initial-scale=1, minimum-scale=1, width=device-width&quot;&gt;&#xa;    &lt;title&gt;Error 404 (Not Found)!!1&lt;/title&gt;&#xa;    &lt;style&gt;&#xa;    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* &gt; body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right</elem>
+</script><script id="http-server-header" output="&#xa;  Google Frontend&#xa;  sffe"><elem>Google Frontend</elem>
+<elem>sffe</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (rsa 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (rsa 2048) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+</table>
+<elem key="least strength">A</elem>
+</script></port>
+</ports>
+<os><portused state="open" proto="tcp" portid="443"/>
+<osmatch name="Oracle Virtualbox" accuracy="97" line="86934">
+<osclass type="bridge" vendor="Oracle" osfamily="Virtualbox" accuracy="97"><cpe>cpe:/o:oracle:virtualbox</cpe></osclass>
+</osmatch>
+<osmatch name="QEMU user mode network gateway" accuracy="91" line="88598">
+<osclass type="general purpose" vendor="QEMU" osfamily="QEMU" accuracy="91"><cpe>cpe:/a:qemu:qemu</cpe></osclass>
+</osmatch>
+</os>
+<tcpsequence index="17" difficulty="Good luck!" values="B72B9A01,B72D8E01,B72F8201,B7317601,B7336A01,B7365801"/>
+<ipidsequence class="Incrementing by 2" values="6717,6719,671B,671D,671F,6721"/>
+<tcptssequence class="none returned (unsupported)"/>
+<times srtt="7441" rttvar="12865" to="100000"/>
+</host>
+<host starttime="1599735861" endtime="1599736044"><status state="up" reason="reset" reason_ttl="255"/>
+<address addr="87.250.250.242" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ya.ru" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="domain" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="http" servicefp="SF-Port80-TCP:V=7.60%I=7%D=9/10%Time=5F5A083D%P=x86_64-pc-linux-gnu%r(GetRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(HTTPOptions,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(RTSPRequest,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;)%r(FourOhFourRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(SIPOptions,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;);" method="probed" conf="10"/><script id="fingerprint-strings" output="&#xa;  FourOhFourRequest, GetRequest, HTTPOptions: &#xa;    HTTP/1.1 406 Not acceptable&#xa;    Content-Length: 0&#xa;  RTSPRequest, SIPOptions: &#xa;    HTTP/1.1 400 Bad request&#xa;    Connection: Close&#xa;    Content-Length: 0"><elem key="FourOhFourRequest, GetRequest, HTTPOptions">&#xa;    HTTP/1.1 406 Not acceptable&#xa;    Content-Length: 0</elem>
+<elem key="RTSPRequest, SIPOptions">&#xa;    HTTP/1.1 400 Bad request&#xa;    Connection: Close&#xa;    Content-Length: 0</elem>
+</script></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="https" servicefp="SF-Port443-TCP:V=7.60%T=SSL%I=7%D=9/10%Time=5F5A0849%P=x86_64-pc-linux-gnu%r(GetRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(HTTPOptions,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(FourOhFourRequest,32,&quot;HTTP/1\.1\x20406\x20Not\x20acceptable\r\nContent-Length:\x200\r\n\r\n&quot;)%r(RTSPRequest,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;)%r(SIPOptions,42,&quot;HTTP/1\.1\x20400\x20Bad\x20request\r\nConnection:\x20Close\r\nContent-Length:\x200\r\n\r\n&quot;);" tunnel="ssl" method="probed" conf="10"/><script id="fingerprint-strings" output="&#xa;  FourOhFourRequest, GetRequest, HTTPOptions: &#xa;    HTTP/1.1 406 Not acceptable&#xa;    Content-Length: 0&#xa;  RTSPRequest, SIPOptions: &#xa;    HTTP/1.1 400 Bad request&#xa;    Connection: Close&#xa;    Content-Length: 0"><elem key="FourOhFourRequest, GetRequest, HTTPOptions">&#xa;    HTTP/1.1 406 Not acceptable&#xa;    Content-Length: 0</elem>
+<elem key="RTSPRequest, SIPOptions">&#xa;    HTTP/1.1 400 Bad request&#xa;    Connection: Close&#xa;    Content-Length: 0</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.0: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A&#xa;      TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;    warnings: &#xa;      64-bit block cipher 3DES vulnerable to SWEET32 attack&#xa;  TLSv1.1: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A&#xa;      TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;    warnings: &#xa;      64-bit block cipher 3DES vulnerable to SWEET32 attack&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (prime256v1) - A&#xa;      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (rsa 2048) - A&#xa;      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (prime256v1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A&#xa;      TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (prime256v1) - A&#xa;      TLS_ECDHE_ECDSA_WITH_AES_128_CCM (prime256v1) - A&#xa;      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (prime256v1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (rsa 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A&#xa;      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (prime256v1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_CCM_8 (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_CCM (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_CBC_SHA256 (rsa 2048) - A&#xa;      TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A&#xa;      TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;    warnings: &#xa;      64-bit block cipher 3DES vulnerable to SWEET32 attack&#xa;  least strength: C"><table key="TLSv1.0">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_3DES_EDE_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">C</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+<table key="warnings">
+<elem>64-bit block cipher 3DES vulnerable to SWEET32 attack</elem>
+</table>
+</table>
+<table key="TLSv1.1">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_3DES_EDE_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">C</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+<table key="warnings">
+<elem>64-bit block cipher 3DES vulnerable to SWEET32 attack</elem>
+</table>
+</table>
+<table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256</elem>
+<elem key="kex_info">prime256v1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">prime256v1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8</elem>
+<elem key="kex_info">prime256v1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_ECDSA_WITH_AES_128_CCM</elem>
+<elem key="kex_info">prime256v1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256</elem>
+<elem key="kex_info">prime256v1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">prime256v1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_CCM_8</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_CCM</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_CBC_SHA256</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_AES_128_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_RSA_WITH_3DES_EDE_CBC_SHA</elem>
+<elem key="kex_info">rsa 2048</elem>
+<elem key="strength">C</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+<table key="warnings">
+<elem>64-bit block cipher 3DES vulnerable to SWEET32 attack</elem>
+</table>
+</table>
+<elem key="least strength">C</elem>
+</script></port>
+</ports>
+<os><portused state="open" proto="tcp" portid="80"/>
+<osmatch name="Oracle Virtualbox" accuracy="97" line="86934">
+<osclass type="bridge" vendor="Oracle" osfamily="Virtualbox" accuracy="97"><cpe>cpe:/o:oracle:virtualbox</cpe></osclass>
+</osmatch>
+<osmatch name="QEMU user mode network gateway" accuracy="91" line="88598">
+<osclass type="general purpose" vendor="QEMU" osfamily="QEMU" accuracy="91"><cpe>cpe:/a:qemu:qemu</cpe></osclass>
+</osmatch>
+</os>
+<tcpsequence index="17" difficulty="Good luck!" values="B72AA001,B72C9401,B72E8801,B7307C01,B7327001,B7355E01"/>
+<ipidsequence class="Incrementing by 2" values="6716,6718,671A,671C,671E,6720"/>
+<tcptssequence class="none returned (unsupported)"/>
+<times srtt="7351" rttvar="5234" to="100000"/>
+</host>
+<runstats><finished time="1599736044" timestr="Thu Sep 10 14:07:24 2020" elapsed="184.14" summary="Nmap done at Thu Sep 10 14:07:24 2020; 2 IP addresses (2 hosts up) scanned in 184.14 seconds" exit="success"/><hosts up="2" down="0" total="2"/>
+</runstats>
+</nmaprun>
