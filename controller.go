@@ -17,7 +17,7 @@ func createScan() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// RISM scan background job id from POST form
 		id := c.FormValue("id")
-		exist, err := rowExists(id)
+		exist, err := cehckIdExistence(id)
 		if err != nil {
 			logChan <- logMessage(fmt.Sprintf("Nmap scan controller check existence error: %s", err))
 			return c.String(http.StatusInternalServerError, "Error")
@@ -39,29 +39,11 @@ func createScan() echo.HandlerFunc {
 
 // Insert job with ID to sqlite database
 func insertRow(id string, options string) error {
-	//resultChan := make(chan error)
-	//	c := writeCommand{
-	//		command:    createJobSQL,
-	//		params:     []string{id, options, "0", "0", time.Now().String()},
-	//		resultChan: resultChan,
-	//	}
-	//	writeChan <- c
-	//	return <-resultChan
 	createJobSQL := `INSERT INTO jobs (id, options, status, attempts, created_at)
-      VALUES (%s, %s, %d, %d, %s)`
-	sql := fmt.Sprintf(createJobSQL, id, options, 0, 0, time.Now().String())
-	err := execSQL(sql, nil)
+      VALUES (?, ?, ?, ?, ?)`
+	err := execSQL(createJobSQL, nil, id, options, 0, 0, time.Now().String())
 	if err != nil {
 		return err
 	}
 	return nil
-}
-
-// Check that job with ID already exists in sqlite database
-func rowExists(id string) (bool, error) {
-	var exist bool
-	//err := tx.QueryRow(checkExistenceSQL, id).Scan(&exist)
-	// return exist, err
-	// TODO remove it
-	return exist, nil
 }

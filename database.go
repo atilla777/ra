@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"log"
+	"strconv"
 )
 
 const (
@@ -37,28 +38,84 @@ func createDatabse() {
 	}
 }
 
-func databaseWriter() {
-	for wc := range writeChan {
-		wc.resultChan <- executeCommand(wc.command, wc.params)
-	}
-}
-
-func executeCommand(command string, params []string) error {
-	// Make slice of interfaces from slice of strings to db.Exec args
-	args := make([]interface{}, len(params))
-	for i, p := range params {
-		args[i] = p
-	}
-	// Execute SQL command
-	err := execSQL(command, nil)
-	return err
-}
-
-func execSQL(sql string, resultFn func(stmt *sqlite.Stmt) error) error {
+func waitingJobs() ([]Job, error) {
+	var res []Job
 	conn := pool.Get(nil)
 	defer pool.Put(conn)
+	newJobsSQL := `SELECT id, options, attempts FROM jobs
+    WHERE status < 2
+    AND attempts < $att
+    ORDER BY created_at
+    LIMIT $lim`
+	stmt := conn.Prep(newJobsSQL)
+	defer stmt.Reset()
+	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.attempts")))
+	stmt.SetText("$lim", strconv.Itoa(viper.GetInt("ra.workers.queue")))
+	for {
+		if hasRow, err := stmt.Step(); err != nil {
+			return nil, err
+		} else if !hasRow {
+			break
+		}
+		job := Job{
+			Id:       stmt.GetText("id"),
+			Options:  stmt.GetText("options"),
+			Attempts: int(stmt.GetInt64("attempts")),
+		}
+		res = append(res, job)
+	}
+	return res, nil
+}
 
-	err := sqlitex.Exec(conn, sql, nil)
+func finishedJobs() ([]Job, error) {
+	var res []Job
+	conn := pool.Get(nil)
+	defer pool.Put(conn)
+	finishedJobsSQL := `SELECT id
+    FROM jobs
+    WHERE status = 3
+    ORDER BY created_at`
+	stmt := conn.Prep(finishedJobsSQL)
+	defer stmt.Reset()
+	for {
+		if hasRow, err := stmt.Step(); err != nil {
+			return nil, err
+		} else if !hasRow {
+			break
+		}
+		job := Job{
+			Id:       stmt.GetText("id"),
+			Options:  stmt.GetText("options"),
+			Attempts: int(stmt.GetInt64("attempts")),
+		}
+		res = append(res, job)
+	}
+	return res, nil
+}
+
+func cehckIdExistence(id string) (bool, error) {
+	conn := pool.Get(nil)
+	defer pool.Put(conn)
+	stmt := conn.Prep("SELECT EXISTS (SELECT 1 FROM jobs WHERE id = $id);")
+	defer stmt.Reset()
+	stmt.SetText("$id", id)
+	var res bool
+	for {
+		if hasRow, err := stmt.Step(); err != nil {
+			return false, err
+		} else if !hasRow {
+			break
+		}
+		res = stmt.ColumnInt(0) == 1
+		break
+	}
+	return res, nil
+}
+
+func execSQL(sql string, resultFn func(stmt *sqlite.Stmt) error, values ...interface{}) error {
+	conn := pool.Get(nil)
+	defer pool.Put(conn)
+	err := sqlitex.Exec(conn, sql, resultFn, values...)
 	if err != nil {
 		return err
 	}

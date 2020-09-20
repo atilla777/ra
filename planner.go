@@ -1,20 +1,22 @@
 package main
 
 import (
-	"database/sql"
-	//	"fmt"
-	_ "github.com/mattn/go-sqlite3"
-	//	"github.com/spf13/viper"
+	"fmt"
+	"github.com/spf13/viper"
+	"time"
 )
 
-const (
-	newJobsSQL = `SELECT id, options, attempts FROM jobs
-    WHERE status < 2
-    AND attempts < ?
-    ORDER BY created_at
-    LIMIT ?`
-	queueJobSQL = `UPDATE jobs SET status = 2, attempts = ? WHERE id = ?`
-)
+func startPlanner() {
+	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.workers.tick"))
+	for _ = range ticker.C {
+		if err := sendJobsToQueue(); err != nil {
+			logChan <- logMessage(fmt.Sprintf("Planner error: %s", err))
+		}
+		if err := sendResults(); err != nil {
+			logChan <- logMessage(fmt.Sprintf("Responser error: %s", err))
+		}
+	}
+}
 
 // Select not finished jobs from sqlite database end sent it to workers via queue (channel)
 // jobs.statuses:
@@ -24,38 +26,29 @@ const (
 // 3 - finished (taken from queue by worker)
 // X (deleted) - sent (result sent by responser)
 func sendJobsToQueue() error {
-	//	rows, err := tx.Query(
-	//		newJobsSQL,
-	//		viper.GetInt("ra.workers.attempts"),
-	//		viper.GetInt("ra.workers.queue"),
-	//	)
-	//	if err != nil {
-	//		return fmt.Errorf("Can`t make DB query: %s", err)
-	//	}
-	//	defer rows.Close()
-	//	for rows.Next() {
-	//		var id string
-	//		var options string
-	//		var attempts int
-	//		err = rows.Scan(&id, &options, &attempts)
-	//		if err != nil {
-	//			return fmt.Errorf("Can`t scan DB query result: %s", err)
-	//		}
-	//		job := Job{Id: id, Options: options, Attempmts: attempts}
-	//		jobChan <- job
-	//		if err := queueJob(tx, job, attempts); err != nil {
-	//			return fmt.Errorf("Can`t update DB to set job queued : %s", err)
-	//		}
-	//	}
-	//	tx.Commit()
+	jobs, err := waitingJobs()
+	if err != nil {
+		return fmt.Errorf("Search new jobs error: %s", err)
+	}
+
+	for _, j := range jobs {
+		jobChan <- j
+		if err := markQueueJob(j.Id, j.Attempts); err != nil {
+			logChan <- logMessage(fmt.Sprintf("Mark job %s as planned error: %s", j.Id, err))
+		}
+	}
 	return nil
 }
 
-func queueJob(tx *sql.Tx, j Job, a int) error {
-	mutex.Lock()
-	defer mutex.Unlock()
+func markQueueJob(id string, a int) error {
 	// TODO add retry period to jobs field
-	_, err := tx.Exec(queueJobSQL, a+1, j.Id)
+	queueJobSQL := `UPDATE jobs SET status = 2, attempts = ? WHERE id = ?`
+	err := execSQL(
+		queueJobSQL,
+		nil,
+		a+1,
+		id,
+	)
 	if err != nil {
 		return err
 	}

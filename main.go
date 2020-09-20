@@ -15,9 +15,9 @@ import (
 )
 
 type Job struct {
-	Id        string
-	Options   string
-	Attempmts int
+	Id       string
+	Options  string
+	Attempts int
 }
 
 type logMessage string
@@ -50,10 +50,6 @@ func main() {
 	// Start logging in file
 	logStart()
 
-	// Start database writer
-	writeChan = make(chan writeCommand, 100)
-	go databaseWriter()
-
 	// Initialize background scans workers pool
 	jobChan = make(chan Job, viper.GetInt("ra.workers.queue"))
 	for i := 0; i < viper.GetInt("ra.workers.count"); i++ {
@@ -62,17 +58,7 @@ func main() {
 	}
 
 	// Initilize background job planner (it will create queue in channel and send result to RISM server)
-	//	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.workers.tick"))
-	//	go func() {
-	//		for _ = range ticker.C {
-	//			if err := sendJobsToQueue(); err != nil {
-	//				logChan <- logMessage(fmt.Sprintf("Planner error: %s", err))
-	//			}
-	//			if err := sendResults(); err != nil {
-	//				logChan <- logMessage(fmt.Sprintf("Responser error: %s", err))
-	//			}
-	//		}
-	//	}()
+	go startPlanner()
 
 	// Initialize Echo web framework
 	e := echo.New()

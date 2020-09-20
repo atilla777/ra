@@ -11,46 +11,25 @@ import (
 	"os"
 )
 
-const (
-	finishedJobsSQL = `SELECT id
-    FROM jobs
-    WHERE status = 3
-    ORDER BY created_at`
-	deleteJobSQL = `DELETE FROM jobs
-    WHERE
-    id = ?
-    AND status = 3`
-)
-
 func sendResults() error {
-	//	tx, err := db.Begin()
-	//	if err != nil {
-	//		return fmt.Errorf("Can`t start DB transaction: %s", err)
-	//	}
-	//	rows, err := tx.Query(finishedJobsSQL)
-	//	if err != nil {
-	//		return fmt.Errorf("Can`t make DB query: %s", err)
-	//	}
-	//	defer rows.Close()
-	//	for rows.Next() {
-	//		var id string
-	//		err = rows.Scan(&id)
-	//		if err != nil {
-	//			return fmt.Errorf("Can`t scan DB query result: %s", err)
-	//		}
-	//		err = sendResult(id)
-	//		// TODO Add retry for send result
-	//		if err != nil {
-	//			return fmt.Errorf("Can`t send result: %s", err)
-	//		} else {
-	//			return deleteJob(tx, id)
-	//		}
-	//	}
-	//	tx.Commit()
+	jobs, err := finishedJobs()
+	if err != nil {
+		return fmt.Errorf("Search finished jobs error: %s", err)
+	}
+	for _, j := range jobs {
+		err := sendOneResult(j.Id)
+		// TODO Add retry for send result
+		if err != nil {
+			logChan <- logMessage(fmt.Sprintf("Can`t send result of job %s: %s", j.Id, err))
+		} else {
+			logChan <- logMessage(fmt.Sprintf("Result %s sent.", j.Id))
+			deleteJob(j.Id)
+		}
+	}
 	return nil
 }
 
-func sendResult(id string) error {
+func sendOneResult(id string) error {
 	outputPath := getPath(id)
 	_, err := os.Stat(outputPath)
 	if err != nil {
@@ -85,26 +64,13 @@ func sendResult(id string) error {
 	}
 }
 
-func deleteJob(id string) error {
-	if err := deleteRecord(id); err != nil {
-		return fmt.Errorf("Can`t delete job: %s", err)
+func deleteJob(id string) {
+	if err := deleteFinishedJob(id); err != nil {
+		logChan <- logMessage(fmt.Sprintf("Can`t delete job: %s", err))
 	}
 	if err := deleteFile(id); err != nil {
-		return fmt.Errorf("Can`t delete file: %s", err)
+		logChan <- logMessage(fmt.Sprintf("Can`t delete file: %s", err))
 	}
-	return nil
-}
-
-func deleteRecord(id string) error {
-	mutex.Lock()
-	defer mutex.Unlock()
-	err := execSQL(deleteJobSQL, nil)
-	if err != nil {
-		return err
-	}
-	// TODO remove it
-	fmt.Println("Job deleted")
-	return nil
 }
 
 func deleteFile(id string) error {
@@ -118,5 +84,17 @@ func deleteFile(id string) error {
 	}
 	// TODO remove it
 	fmt.Println("File deleted")
+	return nil
+}
+
+func deleteFinishedJob(id string) error {
+	deleteJobSQL := `DELETE FROM jobs
+    WHERE
+    id = ?
+    AND status = 3`
+	err := execSQL(deleteJobSQL, nil, id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
