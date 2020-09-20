@@ -1,34 +1,18 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
-	"log"
 	"os/exec"
 	"strings"
-)
-
-const (
-	updateJobSQL = `UPDATE jobs
-    SET status = ?
-    WHERE id = ?`
 )
 
 // Worker that run nmap scan form queue in channel
 // TODO check is jobChan needed as param?
 func worker(i int) {
-	// Open connection to DB
-	db, err := sql.Open("sqlite3", sqliteConnStr)
-	defer db.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Start nmap every time when job appears in channel
 	for job := range jobChan {
 		// TODO send error to logger chanel
-		if err := startNmap(job, i, db); err != nil {
+		if err := startNmap(job, i); err != nil {
 			logChan <- logMessage(fmt.Sprintf("Scan %s failed by worker %d: %s", job.Id, i, err))
 		} else {
 			logChan <- logMessage(fmt.Sprintf("Scan %s done by worker %d", job.Id, i))
@@ -37,18 +21,18 @@ func worker(i int) {
 }
 
 // Run nmap and save result to XML file
-func startNmap(job Job, i int, db *sql.DB) error {
+func startNmap(job Job, i int) error {
 	options, err := jobOptions(job.Options, job.Id)
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command("sudo", options...)
 	if _, err := cmd.CombinedOutput(); err != nil {
-		return updateFailed(db, job.Id, err)
+		return updateFailed(job.Id, err)
 	}
 	// TODO remove it
 	fmt.Println("Scan done!!!!")
-	return updateFinished(db, job.Id)
+	return updateFinished(job.Id)
 }
 
 func jobOptions(options string, id string) ([]string, error) {
@@ -61,10 +45,10 @@ func jobOptions(options string, id string) ([]string, error) {
 	return strings.Split(o, " "), nil
 }
 
-func updateRecord(db *sql.DB, id string, status string) error {
-	mutex.Lock()
-	defer mutex.Unlock()
-	_, err := db.Exec(updateJobSQL, status, id)
+func updateRecord(id string, status int) error {
+	updateJobSQL := "UPDATE jobs SET status = %d WHERE id = %s"
+	sql := fmt.Sprintf(updateJobSQL, status, id)
+	err := execSQL(sql, nil)
 	if err != nil {
 		return err
 	}
@@ -76,8 +60,8 @@ func getPath(id string) string {
 	return outputPath
 }
 
-func updateFailed(db *sql.DB, id string, e error) error {
-	err := updateRecord(db, id, "1")
+func updateFailed(id string, e error) error {
+	err := updateRecord(id, 1)
 	if err != nil {
 		return fmt.Errorf("%s; DB update error: %s", e, err)
 	} else {
@@ -85,8 +69,8 @@ func updateFailed(db *sql.DB, id string, e error) error {
 	}
 }
 
-func updateFinished(db *sql.DB, id string) error {
-	err := updateRecord(db, id, "3")
+func updateFinished(id string) error {
+	err := updateRecord(id, 3)
 	if err != nil {
 		return fmt.Errorf("DB update error: %s", err)
 	}

@@ -1,17 +1,13 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/labstack/echo"
-	_ "github.com/mattn/go-sqlite3"
 	"net/http"
 	"time"
 )
 
 const (
-	createJobSQL = `INSERT INTO jobs (id, options, status, attempts, created_at)
-      VALUES (?, ?, ?, ?, ?)`
 	checkExistenceSQL = `SELECT EXISTS (SELECT 1 FROM jobs WHERE id = ?)`
 )
 
@@ -20,15 +16,8 @@ const (
 func createScan() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// RISM scan background job id from POST form
-
-		db, err := sql.Open("sqlite3", sqliteConnStr)
-		defer db.Close()
-		if err != nil {
-			logChan <- logMessage(fmt.Sprintf("Nmap scan controller open DB error: %s", err))
-			return c.String(http.StatusInternalServerError, "Error")
-		}
 		id := c.FormValue("id")
-		exist, err := rowExists(db, id)
+		exist, err := rowExists(id)
 		if err != nil {
 			logChan <- logMessage(fmt.Sprintf("Nmap scan controller check existence error: %s", err))
 			return c.String(http.StatusInternalServerError, "Error")
@@ -50,19 +39,29 @@ func createScan() echo.HandlerFunc {
 
 // Insert job with ID to sqlite database
 func insertRow(id string, options string) error {
-	resultChan := make(chan error)
-	c := writeCommand{
-		command:    createJobSQL,
-		params:     []string{id, options, "0", "0", time.Now().String()},
-		resultChan: resultChan,
+	//resultChan := make(chan error)
+	//	c := writeCommand{
+	//		command:    createJobSQL,
+	//		params:     []string{id, options, "0", "0", time.Now().String()},
+	//		resultChan: resultChan,
+	//	}
+	//	writeChan <- c
+	//	return <-resultChan
+	createJobSQL := `INSERT INTO jobs (id, options, status, attempts, created_at)
+      VALUES (%s, %s, %d, %d, %s)`
+	sql := fmt.Sprintf(createJobSQL, id, options, 0, 0, time.Now().String())
+	err := execSQL(sql, nil)
+	if err != nil {
+		return err
 	}
-	writeChan <- c
-	return <-resultChan
+	return nil
 }
 
 // Check that job with ID already exists in sqlite database
-func rowExists(db *sql.DB, id string) (bool, error) {
+func rowExists(id string) (bool, error) {
 	var exist bool
-	err := db.QueryRow(checkExistenceSQL, id).Scan(&exist)
-	return exist, err
+	//err := tx.QueryRow(checkExistenceSQL, id).Scan(&exist)
+	// return exist, err
+	// TODO remove it
+	return exist, nil
 }

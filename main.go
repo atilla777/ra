@@ -6,15 +6,12 @@
 package main
 
 import (
-	"database/sql"
+	"crawshaw.io/sqlite/sqlitex"
 	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/viper"
-	"log"
 	"sync"
-	"time"
 )
 
 type Job struct {
@@ -28,7 +25,6 @@ type logMessage string
 var logChan chan logMessage
 var jobChan chan Job
 var mutex = &sync.Mutex{}
-var sqliteConnStr string
 var debugMode bool = true
 
 type writeCommand struct {
@@ -39,20 +35,17 @@ type writeCommand struct {
 
 var writeChan chan writeCommand
 
+var pool *sqlitex.Pool
+
 func main() {
 	// Make ra initial configuration
-	if err := loadConfig(); err != nil {
-		log.Fatalf("Error load config file: %v", err)
-	}
-	sqliteConnStr = fmt.Sprintf(
-		"file:%s?cache=shared&mode=rwc&_journal_mode=WAL",
-		viper.GetString("ra.sqlite"),
-	)
+	loadConfig()
+
+	// Create database connections pool
+	pool = createPool()
 
 	// Create database if not exist
-	if err := createDatabse(); err != nil {
-		log.Fatalf("Error create/check existence DB: %v", err)
-	}
+	createDatabse()
 
 	// Start logging in file
 	logStart()
@@ -69,22 +62,17 @@ func main() {
 	}
 
 	// Initilize background job planner (it will create queue in channel and send result to RISM server)
-	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.workers.tick"))
-	go func() {
-		db, err := sql.Open("sqlite3", sqliteConnStr)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
-		for _ = range ticker.C {
-			if err := sendJobsToQueue(db); err != nil {
-				logChan <- logMessage(fmt.Sprintf("Planner error: %s", err))
-			}
-			if err := sendResults(db); err != nil {
-				logChan <- logMessage(fmt.Sprintf("Responser error: %s", err))
-			}
-		}
-	}()
+	//	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.workers.tick"))
+	//	go func() {
+	//		for _ = range ticker.C {
+	//			if err := sendJobsToQueue(); err != nil {
+	//				logChan <- logMessage(fmt.Sprintf("Planner error: %s", err))
+	//			}
+	//			if err := sendResults(); err != nil {
+	//				logChan <- logMessage(fmt.Sprintf("Responser error: %s", err))
+	//			}
+	//		}
+	//	}()
 
 	// Initialize Echo web framework
 	e := echo.New()

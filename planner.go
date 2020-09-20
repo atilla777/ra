@@ -2,9 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	//	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/spf13/viper"
+	//	"github.com/spf13/viper"
 )
 
 const (
@@ -23,35 +23,31 @@ const (
 // 2 - in queue (placed to chanel by planner)
 // 3 - finished (taken from queue by worker)
 // X (deleted) - sent (result sent by responser)
-func sendJobsToQueue(db *sql.DB) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return fmt.Errorf("Can`t start DB transaction: %s", err)
-	}
-	rows, err := tx.Query(
-		newJobsSQL,
-		viper.GetInt("ra.workers.attempts"),
-		viper.GetInt("ra.workers.queue"),
-	)
-	if err != nil {
-		return fmt.Errorf("Can`t make DB query: %s", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var id string
-		var options string
-		var attempts int
-		err = rows.Scan(&id, &options, &attempts)
-		if err != nil {
-			return fmt.Errorf("Can`t scan DB query result: %s", err)
-		}
-		job := Job{Id: id, Options: options, Attempmts: attempts}
-		jobChan <- job
-		if err := queueJob(tx, job, attempts); err != nil {
-			return fmt.Errorf("Can`t update DB to set job queued : %s", err)
-		}
-	}
-	tx.Commit()
+func sendJobsToQueue() error {
+	//	rows, err := tx.Query(
+	//		newJobsSQL,
+	//		viper.GetInt("ra.workers.attempts"),
+	//		viper.GetInt("ra.workers.queue"),
+	//	)
+	//	if err != nil {
+	//		return fmt.Errorf("Can`t make DB query: %s", err)
+	//	}
+	//	defer rows.Close()
+	//	for rows.Next() {
+	//		var id string
+	//		var options string
+	//		var attempts int
+	//		err = rows.Scan(&id, &options, &attempts)
+	//		if err != nil {
+	//			return fmt.Errorf("Can`t scan DB query result: %s", err)
+	//		}
+	//		job := Job{Id: id, Options: options, Attempmts: attempts}
+	//		jobChan <- job
+	//		if err := queueJob(tx, job, attempts); err != nil {
+	//			return fmt.Errorf("Can`t update DB to set job queued : %s", err)
+	//		}
+	//	}
+	//	tx.Commit()
 	return nil
 }
 

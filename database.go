@@ -1,28 +1,66 @@
 package main
 
 import (
-	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	"crawshaw.io/sqlite"
+	"crawshaw.io/sqlite/sqlitex"
+	"fmt"
+	"github.com/spf13/viper"
 	"log"
 )
 
-func databaseWriter() {
-	// TODO move param to viper
-	db, err := sql.Open("sqlite3", sqliteConnStr)
-	defer db.Close()
+const (
+	dbSchemaSQL = `CREATE TABLE IF NOT EXISTS jobs (
+      id text PRIMARY KEY,
+      options text NOT NULL,
+      status integer NOT NULL DEFAULT 0,
+      attempts integer NOT NULL DEFAULT 0,
+      created_at text NOT NULL
+    );`
+)
+
+func createPool() *sqlitex.Pool {
+	sqliteConnStr := fmt.Sprintf(
+		"file:%s?cache=shared&mode=rwc&_journal_mode=WAL",
+		viper.GetString("ra.sqlite"),
+	)
+	db, err := sqlitex.Open(sqliteConnStr, 0, 16)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error load config file: %v", err)
 	}
-	for wc := range writeChan {
-		wc.resultChan <- executeCommand(db, wc.command, wc.params)
+	return db
+}
+
+func createDatabse() {
+	err := execSQL(dbSchemaSQL, nil)
+	if err != nil {
+		log.Fatalf("Error create/check existence DB: %v", err)
 	}
 }
 
-func executeCommand(db *sql.DB, command string, params []string) error {
+func databaseWriter() {
+	for wc := range writeChan {
+		wc.resultChan <- executeCommand(wc.command, wc.params)
+	}
+}
+
+func executeCommand(command string, params []string) error {
+	// Make slice of interfaces from slice of strings to db.Exec args
 	args := make([]interface{}, len(params))
 	for i, p := range params {
 		args[i] = p
 	}
-	_, err := db.Exec(command, args...)
+	// Execute SQL command
+	err := execSQL(command, nil)
 	return err
+}
+
+func execSQL(sql string, resultFn func(stmt *sqlite.Stmt) error) error {
+	conn := pool.Get(nil)
+	defer pool.Put(conn)
+
+	err := sqlitex.Exec(conn, sql, nil)
+	if err != nil {
+		return err
+	}
+	return nil
 }

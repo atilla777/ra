@@ -5,9 +5,7 @@ package main
 
 import (
 	"bytes"
-	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/viper"
 	"net/http"
 	"os"
@@ -24,31 +22,31 @@ const (
     AND status = 3`
 )
 
-func sendResults(db *sql.DB) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return fmt.Errorf("Can`t start DB transaction: %s", err)
-	}
-	rows, err := tx.Query(finishedJobsSQL)
-	if err != nil {
-		return fmt.Errorf("Can`t make DB query: %s", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var id string
-		err = rows.Scan(&id)
-		if err != nil {
-			return fmt.Errorf("Can`t scan DB query result: %s", err)
-		}
-		err = sendResult(id)
-		// TODO Add retry for send result
-		if err != nil {
-			return fmt.Errorf("Can`t send result: %s", err)
-		} else {
-			return deleteJob(tx, id)
-		}
-	}
-	tx.Commit()
+func sendResults() error {
+	//	tx, err := db.Begin()
+	//	if err != nil {
+	//		return fmt.Errorf("Can`t start DB transaction: %s", err)
+	//	}
+	//	rows, err := tx.Query(finishedJobsSQL)
+	//	if err != nil {
+	//		return fmt.Errorf("Can`t make DB query: %s", err)
+	//	}
+	//	defer rows.Close()
+	//	for rows.Next() {
+	//		var id string
+	//		err = rows.Scan(&id)
+	//		if err != nil {
+	//			return fmt.Errorf("Can`t scan DB query result: %s", err)
+	//		}
+	//		err = sendResult(id)
+	//		// TODO Add retry for send result
+	//		if err != nil {
+	//			return fmt.Errorf("Can`t send result: %s", err)
+	//		} else {
+	//			return deleteJob(tx, id)
+	//		}
+	//	}
+	//	tx.Commit()
 	return nil
 }
 
@@ -87,8 +85,8 @@ func sendResult(id string) error {
 	}
 }
 
-func deleteJob(tx *sql.Tx, id string) error {
-	if err := deleteRecord(tx, id); err != nil {
+func deleteJob(id string) error {
+	if err := deleteRecord(id); err != nil {
 		return fmt.Errorf("Can`t delete job: %s", err)
 	}
 	if err := deleteFile(id); err != nil {
@@ -97,10 +95,10 @@ func deleteJob(tx *sql.Tx, id string) error {
 	return nil
 }
 
-func deleteRecord(tx *sql.Tx, id string) error {
+func deleteRecord(id string) error {
 	mutex.Lock()
 	defer mutex.Unlock()
-	_, err := tx.Exec(deleteJobSQL, id)
+	err := execSQL(deleteJobSQL, nil)
 	if err != nil {
 		return err
 	}
