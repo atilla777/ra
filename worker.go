@@ -46,9 +46,8 @@ func jobOptions(options string, id string) ([]string, error) {
 }
 
 func updateRecord(id string, status int) error {
-	updateJobSQL := "UPDATE jobs SET status = %d WHERE id = %s"
-	sql := fmt.Sprintf(updateJobSQL, status, id)
-	err := execSQL(sql, nil)
+	updateJobSQL := "UPDATE jobs SET status = ? WHERE id = ?"
+	err := execSQL(updateJobSQL, nil, status, id)
 	if err != nil {
 		return err
 	}

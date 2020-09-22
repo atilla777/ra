@@ -12,7 +12,6 @@ const (
 )
 
 // Echo controller: Save recived through API scan job in sqlite database
-//func createScan(db *sql.DB) echo.HandlerFunc {
 func createScan() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// RISM scan background job id from POST form
@@ -20,20 +19,20 @@ func createScan() echo.HandlerFunc {
 		exist, err := cehckIdExistence(id)
 		if err != nil {
 			logChan <- logMessage(fmt.Sprintf("Nmap scan controller check existence error: %s", err))
-			return c.String(http.StatusInternalServerError, "Error")
+			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
 		if exist {
-			return c.String(http.StatusNotAcceptable, "Record already exists.")
+			return c.String(http.StatusNotAcceptable, "{\"error\": \"dublicated\"}")
 		}
 		// Scan options from POST form
 		options := c.FormValue("options")
 		if err := insertRow(id, options); err != nil {
 			logChan <- logMessage(fmt.Sprintf("Nmap scan controller save job error: %s", err))
 			// TODO add error status
-			return c.String(http.StatusInternalServerError, "Error")
+			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
 		logChan <- logMessage(fmt.Sprintf("Scan %s accepted.", id))
-		return c.String(http.StatusOK, "Ok")
+		return c.String(http.StatusOK, "{\"message\": \"accepted\"}")
 	}
 }
 
