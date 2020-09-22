@@ -24,7 +24,7 @@ func createScan() echo.HandlerFunc {
 		if exist {
 			return c.String(http.StatusNotAcceptable, "{\"error\": \"dublicated\"}")
 		}
-		// Scan options from POST form
+		// Get options from POST form
 		options := c.FormValue("options")
 		if err := insertRow(id, options); err != nil {
 			logChan <- logMessage(fmt.Sprintf("Nmap scan controller save job error: %s", err))
@@ -32,6 +32,7 @@ func createScan() echo.HandlerFunc {
 			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
 		logChan <- logMessage(fmt.Sprintf("Scan %s accepted.", id))
+		fmt.Printf("Scan job %s accepted", id)
 		return c.String(http.StatusOK, "{\"message\": \"accepted\"}")
 	}
 }

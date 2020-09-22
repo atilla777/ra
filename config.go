@@ -18,7 +18,7 @@ func loadConfig() {
 	viper.SetDefault("rism.host", "127.0.0.1")
 	viper.SetDefault("rism.port", "3000")
 	viper.SetDefault("rism.protocol", "http")
-	viper.SetDefault("rism.path", "/api/v1/ra")
+	viper.SetDefault("rism.path", "/api/v1/ra_api")
 
 	// Viper configs
 	viper.AddConfigPath("/etc/ra/") // path to look for the config file in

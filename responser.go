@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/spf13/viper"
+	"log"
 	"net/http"
 	"os"
 )
@@ -51,14 +52,14 @@ func sendOneResult(id string) error {
 	if err != nil {
 		return fmt.Errorf("Can`t make new request: %s", err)
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Token token=%s", viper.GetString("ra.secret")))
+	req.Header.Set("Authorization", fmt.Sprintf("Token token=%s", viper.GetString("rism.secret")))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("Can`t make request: %s", err)
 	} else {
 		// TODO remove it
-		fmt.Println("Result sent")
+		log.Println("Result sent")
 		defer resp.Body.Close()
 		return nil
 	}
