@@ -10,6 +10,7 @@ import (
 // Command to pretty print XML in linux: xmllint --format as.xml
 
 type NmapRun struct {
+	Jid       string    `json:"jid"`
 	Args      string    `xml:"args,attr" json:"args"`
 	Start     int       `xml:"start,attr" json:"start"`
 	StartStr  string    `xml:"startstr,attr" json:"startstr"`
@@ -189,12 +190,12 @@ type Element struct {
 
 var nmapStruct = NmapRun{}
 
-func nmapJSON(path string) ([]byte, error) {
+func nmapJSON(path string, jid string) ([]byte, error) {
 	byteArr, err := readFile(path)
 	if err != nil {
 		return nil, err
 	}
-	toStruct(byteArr)
+	toStruct(byteArr, jid)
 	result, err := toJSON(nmapStruct)
 	return result, err
 }
@@ -212,8 +213,9 @@ func readFile(path string) ([]byte, error) {
 	return byteArr, nil
 }
 
-func toStruct(byteArr []byte) {
+func toStruct(byteArr []byte, jid string) {
 	xml.Unmarshal(byteArr, &nmapStruct)
+	nmapStruct.Jid = jid
 }
 
 func toJSON(nmapStruct NmapRun) ([]byte, error) {

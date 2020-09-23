@@ -32,7 +32,7 @@ func createScan() echo.HandlerFunc {
 			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
 		logChan <- logMessage(fmt.Sprintf("Scan %s accepted.", id))
-		fmt.Printf("Scan job %s accepted", id)
+		fmt.Printf("Scan job %s accepted\n", id)
 		return c.String(http.StatusOK, "{\"message\": \"accepted\"}")
 	}
 }
