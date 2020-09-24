@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"os/exec"
 	"strings"
 )
@@ -28,7 +29,7 @@ func startNmap(job Job, i int) error {
 	}
 	cmd := exec.Command("sudo", options...)
 	if _, err := cmd.CombinedOutput(); err != nil {
-		return updateFailed(job.Id, err)
+		return updateFailed(job.Id, err, job.Attempts)
 	}
 	// TODO remove it
 	fmt.Println("Scan done!!!!")
@@ -45,22 +46,18 @@ func jobOptions(options string, id string) ([]string, error) {
 	return strings.Split(o, " "), nil
 }
 
-func updateRecord(id string, status int) error {
-	updateJobSQL := "UPDATE jobs SET status = ? WHERE id = ?"
-	err := execSQL(updateJobSQL, nil, status, id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func getPath(id string) string {
 	outputPath := fmt.Sprintf("%s.xml", id)
 	return outputPath
 }
 
-func updateFailed(id string, e error) error {
-	err := updateRecord(id, 1)
+func updateFailed(id string, e error, att int) error {
+	if att+1 == viper.GetInt("ra.workers.scanner_attempts") {
+		err := deleteJobInDB(id)
+		logChan <- logMessage(fmt.Sprintf("Max attempts reached. Scan job %s was killed.", id))
+		return err
+	}
+	err := updateRecord(id, 1, att+1)
 	if err != nil {
 		return fmt.Errorf("%s; DB update error: %s", e, err)
 	} else {
@@ -69,7 +66,7 @@ func updateFailed(id string, e error) error {
 }
 
 func updateFinished(id string) error {
-	err := updateRecord(id, 3)
+	err := updateRecord(id, 3, 0)
 	if err != nil {
 		return fmt.Errorf("DB update error: %s", err)
 	}

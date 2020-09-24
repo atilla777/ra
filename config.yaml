@@ -6,7 +6,8 @@ ra:
   workers:
     queue: 25
     count: 5
-    attempts: 3
+    scanner_attempts: 3
+    responser_attempts: 3
     tick: 5
 rism:
   host: 127.0.0.1

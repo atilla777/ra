@@ -7,10 +7,11 @@ import (
 
 func loadConfig() {
 	// Default ra configs
-	viper.SetDefault("ra.workers.queue", 25)   // max queue size
-	viper.SetDefault("ra.workers.count", 5)    // max workers count
-	viper.SetDefault("ra.workers.attempts", 3) // max attrempts to do done job
-	viper.SetDefault("ra.workers.tick", 5)     // planner start period in sec
+	viper.SetDefault("ra.workers.queue", 25)             // max queue size
+	viper.SetDefault("ra.workers.count", 5)              // max workers count
+	viper.SetDefault("ra.workers.scanner_attempts", 3)   // max attrempts to do done job
+	viper.SetDefault("ra.workers.responser_attempts", 3) // max attrempts to sent job result
+	viper.SetDefault("ra.workers.tick", 5)               // planner start period in sec
 	viper.SetDefault("ra.host", "127.0.0.1")
 	viper.SetDefault("ra.sqlite", "sqlite.db") // sqlite file path
 	viper.SetDefault("ra.port", "1323")

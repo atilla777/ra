@@ -13,13 +13,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"time"
+	//"time"
 )
-
-type rismResp struct {
-	message string `json:"message"`
-	errors  string `json:"errors"`
-}
 
 func sendResults() error {
 	jobs, err := finishedJobs()
@@ -31,13 +26,16 @@ func sendResults() error {
 		if err != nil {
 			// TODO Add retry for send result
 			logChan <- logMessage(fmt.Sprintf("Can`t send result of job %s: %s", j.Id, err))
+			retryResponserJob(j.Id, err, j.Attempts)
 		} else {
 			if resp["message"] == "accepted" {
-				logChan <- logMessage(fmt.Sprintf("Result %s sent.", j.Id))
+				logChan <- logMessage(fmt.Sprintf("Result job %s sent.", j.Id))
 				deleteJob(j.Id)
 				// TODO remove it
-				fmt.Println("Result sent")
+				fmt.Printf("Result job %s sent\n", j.Id)
 			} else {
+				err := fmt.Errorf("RISM don`t accept result.")
+				retryResponserJob(j.Id, err, j.Attempts)
 				// TODO Add retry for send result
 				logChan <- logMessage(fmt.Sprintf("Result job %s not accepted by RISM", j.Id))
 			}
@@ -64,7 +62,8 @@ func sendOneResult(id string) (map[string]interface{}, error) {
 		viper.GetString("rism.port"),
 		viper.GetString("rism.path"),
 	)
-	client := &http.Client{Timeout: 20 * time.Second}
+	//client := &http.Client{Timeout: 20 * time.Second}
+	client := &http.Client{}
 	req, err := http.NewRequest("POST", rism_url, bytes.NewBuffer(resultJSON))
 	if err != nil {
 		return result, fmt.Errorf("Can`t make new request: %s", err)
@@ -73,7 +72,7 @@ func sendOneResult(id string) (map[string]interface{}, error) {
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		return result, fmt.Errorf("Can`t make request: %s", err)
+		return result, fmt.Errorf("Can`t send request: %s", err)
 	}
 	if resp.Body != nil {
 		defer resp.Body.Close()
@@ -88,8 +87,20 @@ func sendOneResult(id string) (map[string]interface{}, error) {
 	return result, nil
 }
 
+func retryResponserJob(id string, err error, att int) {
+	if att+1 == viper.GetInt("ra.workers.responser_attempts") {
+		deleteJob(id)
+		logChan <- logMessage(fmt.Sprintf("Max attempts reached. Response job %s was killed.", id))
+		return
+	}
+	if err := updateRecord(id, 3, att+1); err != nil {
+		logChan <- logMessage(fmt.Sprintf("Responer DB update error: %s. Response job %s was killed.", err, id))
+		deleteJob(id)
+	}
+}
+
 func deleteJob(id string) {
-	if err := deleteFinishedJob(id); err != nil {
+	if err := deleteJobInDB(id); err != nil {
 		logChan <- logMessage(fmt.Sprintf("Can`t delete job: %s", err))
 	}
 	if err := deleteFile(id); err != nil {
@@ -108,17 +119,5 @@ func deleteFile(id string) error {
 	}
 	// TODO remove it
 	fmt.Println("File deleted")
-	return nil
-}
-
-func deleteFinishedJob(id string) error {
-	deleteJobSQL := `DELETE FROM jobs
-    WHERE
-    id = ?
-    AND status = 3`
-	err := execSQL(deleteJobSQL, nil, id)
-	if err != nil {
-		return err
-	}
 	return nil
 }

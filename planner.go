@@ -32,21 +32,20 @@ func sendJobsToQueue() error {
 	}
 
 	for _, j := range jobs {
-		jobChan <- j
 		if err := markQueueJob(j.Id, j.Attempts); err != nil {
 			logChan <- logMessage(fmt.Sprintf("Mark job %s as planned error: %s", j.Id, err))
 		}
+		jobChan <- j
 	}
 	return nil
 }
 
-func markQueueJob(id string, a int) error {
+func markQueueJob(id string, att int) error {
 	// TODO add retry period to jobs field
-	queueJobSQL := `UPDATE jobs SET status = 2, attempts = ? WHERE id = ?`
+	queueJobSQL := `UPDATE jobs SET status = 2 WHERE id = ?`
 	err := execSQL(
 		queueJobSQL,
 		nil,
-		a+1,
 		id,
 	)
 	if err != nil {

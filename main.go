@@ -1,5 +1,9 @@
 // This is scan agent for RISM server
 
+//Warnings:
+// 1. Timeout on http session in responser not set, hence it may cause some problems with dead sessions between ra and rism
+// 2. Huge count scan results sent by ra to rism can make dos attack on rism
+
 // Command to test api:
 // curl -v -H "Authorization: Bearer secret" -X POST http://localhost:1323/scans -d "id=1" -d "options=127.0.0.1"
 

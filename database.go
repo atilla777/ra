@@ -49,7 +49,7 @@ func waitingJobs() ([]Job, error) {
     LIMIT $lim`
 	stmt := conn.Prep(newJobsSQL)
 	defer stmt.Reset()
-	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.attempts")))
+	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.scanner_attempts")))
 	stmt.SetText("$lim", strconv.Itoa(viper.GetInt("ra.workers.queue")))
 	for {
 		if hasRow, err := stmt.Step(); err != nil {
@@ -67,16 +67,25 @@ func waitingJobs() ([]Job, error) {
 	return res, nil
 }
 
+func updateRecord(id string, status int, att int) error {
+	var err error
+	updateJobSQL := "UPDATE jobs SET status = ?, attempts = ? WHERE id = ?"
+	err = execSQL(updateJobSQL, nil, status, att, id)
+	return err
+}
+
 func finishedJobs() ([]Job, error) {
 	var res []Job
 	conn := pool.Get(nil)
 	defer pool.Put(conn)
-	finishedJobsSQL := `SELECT id
+	finishedJobsSQL := `SELECT id, attempts
     FROM jobs
     WHERE status = 3
+    AND attempts < $att
     ORDER BY created_at`
 	stmt := conn.Prep(finishedJobsSQL)
 	defer stmt.Reset()
+	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.responser_attempts")))
 	for {
 		if hasRow, err := stmt.Step(); err != nil {
 			return nil, err
@@ -116,6 +125,17 @@ func execSQL(sql string, resultFn func(stmt *sqlite.Stmt) error, values ...inter
 	conn := pool.Get(nil)
 	defer pool.Put(conn)
 	err := sqlitex.Exec(conn, sql, resultFn, values...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func deleteJobInDB(id string) error {
+	deleteJobSQL := `DELETE FROM jobs
+    WHERE
+    id = ?`
+	err := execSQL(deleteJobSQL, nil, id)
 	if err != nil {
 		return err
 	}

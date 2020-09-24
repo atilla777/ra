@@ -188,15 +188,16 @@ type Element struct {
 	Value string `xml:",chardata" json:"value"`
 }
 
-var nmapStruct = NmapRun{}
+//var nmapStruct = NmapRun{}
 
 func nmapJSON(path string, jid string) ([]byte, error) {
+	nmapStruct := NmapRun{}
 	byteArr, err := readFile(path)
 	if err != nil {
 		return nil, err
 	}
-	toStruct(byteArr, jid)
-	result, err := toJSON(nmapStruct)
+	toStruct(byteArr, jid, &nmapStruct)
+	result, err := toJSON(&nmapStruct)
 	return result, err
 }
 
@@ -213,12 +214,12 @@ func readFile(path string) ([]byte, error) {
 	return byteArr, nil
 }
 
-func toStruct(byteArr []byte, jid string) {
-	xml.Unmarshal(byteArr, &nmapStruct)
+func toStruct(byteArr []byte, jid string, nmapStruct *NmapRun) {
+	xml.Unmarshal(byteArr, nmapStruct)
 	nmapStruct.Jid = jid
 }
 
-func toJSON(nmapStruct NmapRun) ([]byte, error) {
+func toJSON(nmapStruct *NmapRun) ([]byte, error) {
 	nmapJSON, err := json.Marshal(nmapStruct)
 	if err != nil {
 		return nil, err
