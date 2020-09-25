@@ -7,13 +7,13 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"os"
-	//"time"
 )
 
 func sendResults() error {
@@ -25,19 +25,18 @@ func sendResults() error {
 		resp, err := sendOneResult(j.Id)
 		if err != nil {
 			// TODO Add retry for send result
-			logChan <- logMessage(fmt.Sprintf("Can`t send result of job %s: %s", j.Id, err))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Can`t send result of job %s: %s", j.Id, err)}
 			retryResponserJob(j.Id, err, j.Attempts)
 		} else {
 			if resp["message"] == "accepted" {
-				logChan <- logMessage(fmt.Sprintf("Result job %s sent.", j.Id))
+				logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Result job %s sent.", j.Id)}
 				deleteJob(j.Id)
-				// TODO remove it
-				fmt.Printf("Result job %s sent\n", j.Id)
+				logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("Result job %s sent\n", j.Id)}
 			} else {
 				err := fmt.Errorf("RISM don`t accept result.")
 				retryResponserJob(j.Id, err, j.Attempts)
 				// TODO Add retry for send result
-				logChan <- logMessage(fmt.Sprintf("Result job %s not accepted by RISM", j.Id))
+				logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Result job %s not accepted by RISM", j.Id)}
 			}
 		}
 	}
@@ -63,7 +62,10 @@ func sendOneResult(id string) (map[string]interface{}, error) {
 		viper.GetString("rism.path"),
 	)
 	//client := &http.Client{Timeout: 20 * time.Second}
-	client := &http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
 	req, err := http.NewRequest("POST", rism_url, bytes.NewBuffer(resultJSON))
 	if err != nil {
 		return result, fmt.Errorf("Can`t make new request: %s", err)
@@ -90,21 +92,21 @@ func sendOneResult(id string) (map[string]interface{}, error) {
 func retryResponserJob(id string, err error, att int) {
 	if att+1 == viper.GetInt("ra.workers.responser_attempts") {
 		deleteJob(id)
-		logChan <- logMessage(fmt.Sprintf("Max attempts reached. Response job %s was killed.", id))
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Max attempts reached. Response job %s was killed.", id)}
 		return
 	}
 	if err := updateRecord(id, 3, att+1); err != nil {
-		logChan <- logMessage(fmt.Sprintf("Responer DB update error: %s. Response job %s was killed.", err, id))
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Responer DB update error: %s. Response job %s was killed.", err, id)}
 		deleteJob(id)
 	}
 }
 
 func deleteJob(id string) {
 	if err := deleteJobInDB(id); err != nil {
-		logChan <- logMessage(fmt.Sprintf("Can`t delete job: %s", err))
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Can`t delete job: %s", err)}
 	}
 	if err := deleteFile(id); err != nil {
-		logChan <- logMessage(fmt.Sprintf("Can`t delete file: %s", err))
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Can`t delete file: %s", err)}
 	}
 }
 
@@ -117,7 +119,6 @@ func deleteFile(id string) error {
 	if err := os.Remove(outputPath); err != nil {
 		return err
 	}
-	// TODO remove it
-	fmt.Println("File deleted")
+	logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("File deleted")}
 	return nil
 }

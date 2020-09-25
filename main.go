@@ -24,9 +24,12 @@ type Job struct {
 	Attempts int
 }
 
-type logMessage string
+type raLog struct {
+	Lev string
+	Mes string
+}
 
-var logChan chan logMessage
+var logChan chan raLog
 var jobChan chan Job
 var mutex = &sync.Mutex{}
 var debugMode bool = true
@@ -70,5 +73,11 @@ func main() {
 	e.Use(middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
 		return key == viper.GetString("ra.secret"), nil
 	}))
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", viper.GetString("ra.host"), viper.GetString("ra.port"))))
+	if viper.GetString("ra.protocol") == "http" {
+		e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", viper.GetString("ra.host"), viper.GetString("ra.port"))))
+	} else {
+		c := viper.GetString("ra.crt")
+		k := viper.GetString("ra.key")
+		e.Logger.Fatal(e.StartTLS(fmt.Sprintf("%s:%s", viper.GetString("ra.host"), viper.GetString("ra.port")), c, k))
+	}
 }

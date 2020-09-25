@@ -10,16 +10,17 @@ import (
 // Command to pretty print XML in linux: xmllint --format as.xml
 
 type NmapRun struct {
-	Jid       string    `json:"jid"`
-	Args      string    `xml:"args,attr" json:"args"`
-	Start     int       `xml:"start,attr" json:"start"`
-	StartStr  string    `xml:"startstr,attr" json:"startstr"`
-	Version   string    `xml:"version,attr" json:"version"`
-	ScanInfo  ScanInfo  `xml:"scaninfo" json:"scaninfo"`
-	Verbose   Verbose   `xml:"verbose" json:"verbose"`
-	Debugging Debugging `xml:"debugging" json:"debugging"`
-	Hosts     []Host    `xml:"host" json:"hosts"`
-	RunStats  RunStats  `xml:"runstats" json:"runstats"`
+	Jid        string    `json:"jid"`
+	ExternalIP string    `json:"externalip"`
+	Args       string    `xml:"args,attr" json:"args"`
+	Start      int       `xml:"start,attr" json:"start"`
+	StartStr   string    `xml:"startstr,attr" json:"startstr"`
+	Version    string    `xml:"version,attr" json:"version"`
+	ScanInfo   ScanInfo  `xml:"scaninfo" json:"scaninfo"`
+	Verbose    Verbose   `xml:"verbose" json:"verbose"`
+	Debugging  Debugging `xml:"debugging" json:"debugging"`
+	Hosts      []Host    `xml:"host" json:"hosts"`
+	RunStats   RunStats  `xml:"runstats" json:"runstats"`
 }
 
 type ScanInfo struct {
@@ -188,8 +189,6 @@ type Element struct {
 	Value string `xml:",chardata" json:"value"`
 }
 
-//var nmapStruct = NmapRun{}
-
 func nmapJSON(path string, jid string) ([]byte, error) {
 	nmapStruct := NmapRun{}
 	byteArr, err := readFile(path)
@@ -217,6 +216,8 @@ func readFile(path string) ([]byte, error) {
 func toStruct(byteArr []byte, jid string, nmapStruct *NmapRun) {
 	xml.Unmarshal(byteArr, nmapStruct)
 	nmapStruct.Jid = jid
+	ipStruct, _ := myIP()
+	nmapStruct.ExternalIP = ipStruct.Ip
 }
 
 func toJSON(nmapStruct *NmapRun) ([]byte, error) {

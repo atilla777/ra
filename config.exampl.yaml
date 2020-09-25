@@ -1,7 +1,7 @@
 ra:
   key: ra.key
   crt: ra.crt
-  nmapxml: .
+  nmapxml: ./nmap_result
   host: 127.0.0.1
   port: 1323
   secret: secret

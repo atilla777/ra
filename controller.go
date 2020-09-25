@@ -18,7 +18,7 @@ func createScan() echo.HandlerFunc {
 		id := c.FormValue("id")
 		exist, err := cehckIdExistence(id)
 		if err != nil {
-			logChan <- logMessage(fmt.Sprintf("Nmap scan controller check existence error: %s", err))
+			logChan <- raLog{Mes: fmt.Sprintf("Nmap scan controller check existence error: %s", err), Lev: "err"}
 			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
 		if exist {
@@ -27,12 +27,13 @@ func createScan() echo.HandlerFunc {
 		// Get options from POST form
 		options := c.FormValue("options")
 		if err := insertRow(id, options); err != nil {
-			logChan <- logMessage(fmt.Sprintf("Nmap scan controller save job error: %s", err))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Nmap scan controller save job error: %s", err)}
 			// TODO add error status
 			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
-		logChan <- logMessage(fmt.Sprintf("Scan %s accepted.", id))
-		fmt.Printf("Scan job %s accepted\n", id)
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan %s accepted.", id)}
+		logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("Scan job %s accepted.", id)}
+
 		return c.String(http.StatusOK, "{\"message\": \"accepted\"}")
 	}
 }

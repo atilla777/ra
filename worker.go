@@ -14,9 +14,9 @@ func worker(i int) {
 	for job := range jobChan {
 		// TODO send error to logger chanel
 		if err := startNmap(job, i); err != nil {
-			logChan <- logMessage(fmt.Sprintf("Scan %s failed by worker %d: %s", job.Id, i, err))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan %s failed by worker %d: %s", job.Id, i, err)}
 		} else {
-			logChan <- logMessage(fmt.Sprintf("Scan %s done by worker %d", job.Id, i))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan %s done by worker %d", job.Id, i)}
 		}
 	}
 }
@@ -31,8 +31,7 @@ func startNmap(job Job, i int) error {
 	if _, err := cmd.CombinedOutput(); err != nil {
 		return updateFailed(job.Id, err, job.Attempts)
 	}
-	// TODO remove it
-	fmt.Println("Scan done!!!!")
+	logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan done.")}
 	return updateFinished(job.Id)
 }
 
@@ -47,14 +46,14 @@ func jobOptions(options string, id string) ([]string, error) {
 }
 
 func getPath(id string) string {
-	outputPath := fmt.Sprintf("%s.xml", id)
+	outputPath := fmt.Sprintf("%s/%s.xml", viper.GetString("ra.nmapxml"), id)
 	return outputPath
 }
 
 func updateFailed(id string, e error, att int) error {
 	if att+1 == viper.GetInt("ra.workers.scanner_attempts") {
 		err := deleteJobInDB(id)
-		logChan <- logMessage(fmt.Sprintf("Max attempts reached. Scan job %s was killed.", id))
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Max attempts reached. Scan job %s was killed.", id)}
 		return err
 	}
 	err := updateRecord(id, 1, att+1)

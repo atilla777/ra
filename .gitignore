@@ -16,3 +16,8 @@
 
 .DS_Store
 *.swp
+*.xml
+*.crt
+*.key
+config.yaml
+logs

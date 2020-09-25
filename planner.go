@@ -10,10 +10,10 @@ func startPlanner() {
 	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.workers.tick"))
 	for _ = range ticker.C {
 		if err := sendJobsToQueue(); err != nil {
-			logChan <- logMessage(fmt.Sprintf("Planner error: %s", err))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Planner error: %s", err)}
 		}
 		if err := sendResults(); err != nil {
-			logChan <- logMessage(fmt.Sprintf("Responser error: %s", err))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Responser error: %s", err)}
 		}
 	}
 }
@@ -33,7 +33,7 @@ func sendJobsToQueue() error {
 
 	for _, j := range jobs {
 		if err := markQueueJob(j.Id, j.Attempts); err != nil {
-			logChan <- logMessage(fmt.Sprintf("Mark job %s as planned error: %s", j.Id, err))
+			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Mark job %s as planned error: %s", j.Id, err)}
 		}
 		jobChan <- j
 	}
