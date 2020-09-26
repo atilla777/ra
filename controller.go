@@ -31,7 +31,6 @@ func createScan() echo.HandlerFunc {
 			// TODO add error status
 			return c.String(http.StatusInternalServerError, "{\"error\": \"failed\"}")
 		}
-		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan %s accepted.", id)}
 		logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("Scan job %s accepted.", id)}
 
 		return c.String(http.StatusOK, "{\"message\": \"accepted\"}")

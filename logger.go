@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
+// Log info and error message to file
 func logStart() {
-
 	// TODO check is 100 good value?
 	logChan = make(chan raLog, 100)
 	go func() {

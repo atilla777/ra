@@ -16,7 +16,7 @@ func worker(i int) {
 		if err := startNmap(job, i); err != nil {
 			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan %s failed by worker %d: %s", job.Id, i, err)}
 		} else {
-			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan %s done by worker %d", job.Id, i)}
+			logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("Scan %s done by worker %d", job.Id, i)}
 		}
 	}
 }
@@ -31,7 +31,6 @@ func startNmap(job Job, i int) error {
 	if _, err := cmd.CombinedOutput(); err != nil {
 		return updateFailed(job.Id, err, job.Attempts)
 	}
-	logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Scan done.")}
 	return updateFinished(job.Id)
 }
 

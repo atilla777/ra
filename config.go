@@ -6,12 +6,13 @@ import (
 	"log"
 )
 
+// Load ra configurations from file and set defaults
 func loadConfig() {
 	confPath := flag.String("conf-path", "s", "config file path")
-	confName := flag.String("conf-name", "config", "config file name")
+	confName := flag.String("conf-name", "config", "config file name, may be with ext")
 	confExt := flag.String("conf-ext", "yaml", "config file extension")
-	verbLog := flag.Bool("vL", false, "verbose mode (in log)")
-	verbCon := flag.Bool("vC", false, "verbose mode (in console)")
+	verbLog := flag.Bool("vL", false, "verbose mode (write info in log)")
+	verbCon := flag.Bool("vC", false, "verbose mode (write info and error in console)")
 	flag.Parse()
 
 	// Default ra configs
@@ -22,34 +23,26 @@ func loadConfig() {
 	viper.SetDefault("ra.workers.scanner_attempts", 3)   // max attrempts to do done job
 	viper.SetDefault("ra.workers.responser_attempts", 3) // max attrempts to sent job result
 	viper.SetDefault("ra.workers.tick", 5)               // planner start period in sec
-	viper.SetDefault("ra.crt", "ra.crt")
-	viper.SetDefault("ra.pem", "ra.key")
-	viper.SetDefault("ra.host", "127.0.0.1")
-	viper.SetDefault("ra.sqlite", "sqlite.db") // sqlite file path
-	viper.SetDefault("ra.port", "1323")
-	viper.SetDefault("ra.logs", "logs")
-	viper.SetDefault("ra.nmapxml", ".")
-	viper.SetDefault("rism.host", "127.0.0.1")
-	viper.SetDefault("rism.port", "3000")
-	viper.SetDefault("rism.protocol", "http")
-	viper.SetDefault("rism.path", "/api/v1/ra_api")
+	viper.SetDefault("ra.crt", "ra.crt")                 // ra ssl cert
+	viper.SetDefault("ra.pem", "ra.key")                 // ra ssl privat key
+	viper.SetDefault("ra.sqlite", "sqlite.db")           // sqlite file path
+	viper.SetDefault("ra.host", "127.0.0.1")             // ra listen on address
+	viper.SetDefault("ra.port", "1323")                  // ra listen on port
+	viper.SetDefault("ra.logs", "logs")                  // ra log file
+	viper.SetDefault("ra.nmapxml", ".")                  // ran nmap results path
+	viper.SetDefault("rism.host", "127.0.0.1")           // rism server address
+	viper.SetDefault("rism.port", "3000")                //rism server port
+	viper.SetDefault("rism.protocol", "http")            // rism server protocol
+	viper.SetDefault("rism.path", "/api/v1/ra_api")      // rism ra API path
 
 	// Viper configs
 	viper.AddConfigPath(*confPath)  // path to look for the config file in
 	viper.AddConfigPath("/etc/ra/") // path to look for the config file in
-	viper.AddConfigPath(".")        // optionally look for config in the working directory
+	viper.AddConfigPath(".")        // apth to look for config in the working directory
 	viper.SetConfigName(*confName)  // name of config file (without extension)
-	viper.SetConfigType(*confExt)   // REQUIRED if the config file does not have the extension in the name
+	viper.SetConfigType(*confExt)   // if the config file does not have the extension in the name
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error load config file: %v", err)
 	}
-}
-
-func vL() bool {
-	return viper.GetBool("ra.verblog")
-}
-
-func vC() bool {
-	return viper.GetBool("ra.verblog")
 }

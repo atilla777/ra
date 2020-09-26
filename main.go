@@ -1,4 +1,19 @@
-// This is scan agent for RISM server
+// This is nmap scan agent for RISM server
+// To use ra nmap should be installed
+// and user should be allowed to run nmap as superuser without password (see doc for visudo):
+// username     ALL=(ALL) NOPASSWD:ALL
+// or better (more secure way)
+// username     ALL=(ALL) NOPASSWD:ALL
+// To run agent:
+// 1. Create SSL certificate
+// to create self signed SSL certificate:
+// openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+// 2. Make configuration in config.yaml
+// options for yaml config file see at config.go defaults section
+// 3. On RISM server user with API key and rights to access ra API should be created
+// API KEY this user needed to write in ra config
+// 4. To run ra (withot binary executable creating):
+// go run *.go
 
 //Warnings:
 // 1. Timeout on http session in responser not set, hence it may cause some problems with dead sessions between ra and rism

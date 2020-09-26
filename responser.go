@@ -24,18 +24,15 @@ func sendResults() error {
 	for _, j := range jobs {
 		resp, err := sendOneResult(j.Id)
 		if err != nil {
-			// TODO Add retry for send result
 			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Can`t send result of job %s: %s", j.Id, err)}
 			retryResponserJob(j.Id, err, j.Attempts)
 		} else {
 			if resp["message"] == "accepted" {
-				logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Result job %s sent.", j.Id)}
+				logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("Result job %s sent", j.Id)}
 				deleteJob(j.Id)
-				logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("Result job %s sent\n", j.Id)}
 			} else {
 				err := fmt.Errorf("RISM don`t accept result.")
 				retryResponserJob(j.Id, err, j.Attempts)
-				// TODO Add retry for send result
 				logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Result job %s not accepted by RISM", j.Id)}
 			}
 		}
@@ -119,6 +116,6 @@ func deleteFile(id string) error {
 	if err := os.Remove(outputPath); err != nil {
 		return err
 	}
-	logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("File deleted")}
+	logChan <- raLog{Lev: "info", Mes: fmt.Sprintf("File %s deleted", outputPath)}
 	return nil
 }

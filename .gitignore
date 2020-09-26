@@ -15,9 +15,13 @@
 # vendor/
 
 .DS_Store
+sqlite.db
+sqlite.db-shm
+sqlite.db-wal
 *.swp
 *.xml
 *.crt
 *.key
 config.yaml
 logs
+

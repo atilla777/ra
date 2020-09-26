@@ -16,4 +16,4 @@ rism:
   host: 127.0.0.1
   port: 3000
   protocol: http
-  secret: 011a54f3922298708bdf2677fcfb8829
+  secret: 4b69a51caf56bce8086207c9e634833c
