@@ -49,7 +49,7 @@ func waitingJobs() ([]Job, error) {
     LIMIT $lim`
 	stmt := conn.Prep(newJobsSQL)
 	defer stmt.Reset()
-	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.scanner_attempts")))
+	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.attempts")))
 	stmt.SetText("$lim", strconv.Itoa(viper.GetInt("ra.workers.queue")))
 	for {
 		if hasRow, err := stmt.Step(); err != nil {
@@ -85,7 +85,7 @@ func finishedJobs() ([]Job, error) {
     ORDER BY created_at`
 	stmt := conn.Prep(finishedJobsSQL)
 	defer stmt.Reset()
-	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.workers.responser_attempts")))
+	stmt.SetText("$att", strconv.Itoa(viper.GetInt("ra.responser.attempts")))
 	for {
 		if hasRow, err := stmt.Step(); err != nil {
 			return nil, err

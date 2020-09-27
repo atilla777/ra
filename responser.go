@@ -87,7 +87,7 @@ func sendOneResult(id string) (map[string]interface{}, error) {
 }
 
 func retryResponserJob(id string, err error, att int) {
-	if att+1 == viper.GetInt("ra.workers.responser_attempts") {
+	if att+1 == viper.GetInt("ra.responser.attempts") {
 		deleteJob(id)
 		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Max attempts reached. Response job %s was killed.", id)}
 		return

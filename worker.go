@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/spf13/viper"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 // Worker that run nmap scan form queue in channel
@@ -23,13 +25,23 @@ func worker(i int) {
 
 // Run nmap and save result to XML file
 func startNmap(job Job, i int) error {
+	ctx, cancel := context.WithTimeout(
+		context.Background(),
+		time.Duration(viper.GetInt("ra.workers.timeout"))*time.Hour,
+	)
+	defer cancel()
 	options, err := jobOptions(job.Options, job.Id)
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command("sudo", options...)
+	cmd := exec.CommandContext(ctx, "sudo", options...)
 	if _, err := cmd.CombinedOutput(); err != nil {
-		return updateFailed(job.Id, err, job.Attempts)
+		updateFailed(job.Id, job.Attempts)
+		return err
+	}
+	if ctx.Err() != nil {
+		updateFailed(job.Id, job.Attempts)
+		return fmt.Errorf("Scan timeout exceeded")
 	}
 	return updateFinished(job.Id)
 }
@@ -49,17 +61,16 @@ func getPath(id string) string {
 	return outputPath
 }
 
-func updateFailed(id string, e error, att int) error {
-	if att+1 == viper.GetInt("ra.workers.scanner_attempts") {
-		err := deleteJobInDB(id)
+func updateFailed(id string, att int) {
+	if att+1 == viper.GetInt("ra.workers.attempts") {
+		deleteJob(id)
 		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Max attempts reached. Scan job %s was killed.", id)}
-		return err
+		return
 	}
 	err := updateRecord(id, 1, att+1)
 	if err != nil {
-		return fmt.Errorf("%s; DB update error: %s", e, err)
-	} else {
-		return e
+		logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("DB failed job %s update error: %s", id, err)}
+		return
 	}
 }
 

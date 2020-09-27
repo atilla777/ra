@@ -18,11 +18,12 @@ func loadConfig() {
 	// Default ra configs
 	viper.SetDefault("ra.verblog", verbLog)              // verbocity in console
 	viper.SetDefault("ra.verbcon", verbCon)              // verbocity in log
-	viper.SetDefault("ra.workers.queue", 25)             // max queue size
+	viper.SetDefault("ra.workers.queue", 25)             // max queue size (max scan number in queue)
 	viper.SetDefault("ra.workers.count", 5)              // max workers count
-	viper.SetDefault("ra.workers.scanner_attempts", 3)   // max attrempts to do done job
-	viper.SetDefault("ra.workers.responser_attempts", 3) // max attrempts to sent job result
-	viper.SetDefault("ra.workers.tick", 5)               // planner start period in sec
+	viper.SetDefault("ra.workers.responser_attempts", 3) // max attempts to sent job result
+	viper.SetDefault("ra.workers.timeout", 12)           // max scan job time before kill nmap
+	viper.SetDefault("ra.planer.tick", 5)                // planner start period in sec
+	viper.SetDefault("ra.scanner.attempts", 3)           // max attrempts to do done job
 	viper.SetDefault("ra.crt", "ra.crt")                 // ra ssl cert
 	viper.SetDefault("ra.pem", "ra.key")                 // ra ssl privat key
 	viper.SetDefault("ra.sqlite", "sqlite.db")           // sqlite file path

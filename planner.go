@@ -7,7 +7,7 @@ import (
 )
 
 func startPlanner() {
-	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.workers.tick"))
+	ticker := time.NewTicker(time.Second * viper.GetDuration("ra.planer.tick"))
 	for _ = range ticker.C {
 		if err := sendJobsToQueue(); err != nil {
 			logChan <- raLog{Lev: "err", Mes: fmt.Sprintf("Planner error: %s", err)}

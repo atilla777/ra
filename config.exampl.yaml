@@ -12,6 +12,7 @@ ra:
     scanner_attempts: 3
     responser_attempts: 3
     tick: 5
+    timeout: 12
 rism:
   host: 127.0.0.1
   port: 3000
