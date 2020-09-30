@@ -7,7 +7,7 @@
 // To run agent:
 // 1. Create SSL certificate
 // to create self signed SSL certificate:
-// openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+// openssl req -x509 -newkey rsa:4096 -keyout ra.key -out ra.crt -days 365 -nodes
 // 2. Make configuration in config.yaml
 // options for yaml config file see at config.go defaults section
 // 3. On RISM server user with API key and rights to access ra API should be created

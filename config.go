@@ -8,7 +8,7 @@ import (
 
 // Load ra configurations from file and set defaults
 func loadConfig() {
-	confPath := flag.String("conf-path", "s", "config file path")
+	confPath := flag.String("conf-path", ".", "config file path")
 	confName := flag.String("conf-name", "config", "config file name, may be with ext")
 	confExt := flag.String("conf-ext", "yaml", "config file extension")
 	verbLog := flag.Bool("vL", false, "verbose mode (write info in log)")
