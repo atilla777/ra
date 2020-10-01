@@ -3,7 +3,7 @@
 // and user should be allowed to run nmap as superuser without password (see doc for visudo):
 // username     ALL=(ALL) NOPASSWD:ALL
 // or better (more secure way)
-// username     ALL=(ALL) NOPASSWD:ALL
+// username     ALL=(ALL) NOPASSWD:/usr/bin/nmap
 // To run agent:
 // 1. Create SSL certificate
 // to create self signed SSL certificate:

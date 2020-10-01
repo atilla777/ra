@@ -1,11 +1,11 @@
 ra:
   key: ra.key
   crt: ra.crt
-  nmapxml: .
-  host: 127.0.0.1
+  nmapxml: ./nmapxml
+  host: 0.0.0.0
   port: 1323
   secret: secret
-  sqlite: sqlite.db
+  sqlite: ./db/sqlite.db
   workers:
     queue: 25
     count: 5

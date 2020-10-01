@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/spf13/viper"
-	"log"
 )
 
 // Load ra configurations from file and set defaults
@@ -28,6 +28,7 @@ func loadConfig() {
 	viper.SetDefault("ra.pem", "ra.key")                 // ra ssl privat key
 	viper.SetDefault("ra.sqlite", "sqlite.db")           // sqlite file path
 	viper.SetDefault("ra.host", "127.0.0.1")             // ra listen on address
+	viper.SetDefault("ra.protocol", "http")              // ra protocol
 	viper.SetDefault("ra.port", "1323")                  // ra listen on port
 	viper.SetDefault("ra.logs", "logs")                  // ra log file
 	viper.SetDefault("ra.nmapxml", ".")                  // ran nmap results path
@@ -44,6 +45,6 @@ func loadConfig() {
 	viper.SetConfigType(*confExt)   // if the config file does not have the extension in the name
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error load config file: %v", err)
+		fmt.Printf("Error load config file: %v\n", err)
 	}
 }
