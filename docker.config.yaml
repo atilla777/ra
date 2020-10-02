@@ -1,0 +1,23 @@
+ra:
+  key: ra.key
+  crt: ra.crt
+  nmapxml: /nmapxml
+  host: 0.0.0.0
+  port: 1323
+  secret: secret
+  sqlite: /db/sqlite.db
+  workers:
+    queue: 25
+    count: 5
+    attempts: 3
+    tick: 5
+    timeout: 12
+  responser:
+    attempts: 3
+  planer:
+    tick: 5
+rism:
+  host: 127.0.0.1
+  port: 3000
+  protocol: http
+  secret: 4b69a51caf56bce8086207c9e634833c

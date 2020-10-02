@@ -26,7 +26,7 @@ func createPool() *sqlitex.Pool {
 	)
 	db, err := sqlitex.Open(sqliteConnStr, 0, 16)
 	if err != nil {
-		log.Fatalf("Error load config file: %v", err)
+		log.Fatalf("Error open database: %v", err)
 	}
 	return db
 }
