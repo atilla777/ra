@@ -27,6 +27,8 @@ func loadConfig() {
 	viper.SetDefault("ra.crt", "ra.crt")                 // ra ssl cert
 	viper.SetDefault("ra.pem", "ra.key")                 // ra ssl privat key
 	viper.SetDefault("ra.sqlite", "sqlite.db")           // sqlite file path
+	viper.SetDefault("ra.mode", "sudo")                  // nmap privelege escalation mode
+	viper.SetDefault("ra.log_mode", "file")              // write app log to file or on stdout/stderror (docker mode)
 	viper.SetDefault("ra.host", "127.0.0.1")             // ra listen on address
 	viper.SetDefault("ra.protocol", "http")              // ra protocol
 	viper.SetDefault("ra.port", "1323")                  // ra listen on port

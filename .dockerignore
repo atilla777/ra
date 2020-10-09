@@ -1,0 +1,12 @@
+.git
+*.test
+.DS_Store
+sqlite.db
+sqlite.db-shm
+sqlite.db-wal
+*.swp
+*.xml
+*.crt
+*.key
+config.example.yaml
+logs

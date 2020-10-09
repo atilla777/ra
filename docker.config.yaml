@@ -4,8 +4,12 @@ ra:
   nmapxml: /nmapxml
   host: 0.0.0.0
   port: 1323
+  protocol: https
   secret: secret
   sqlite: /db/sqlite.db
+  mode: setuid
+  logs: /log/logs
+  log_mode: docker
   workers:
     queue: 25
     count: 5
@@ -17,7 +21,7 @@ ra:
   planer:
     tick: 5
 rism:
-  host: 127.0.0.1
+  host: 10.0.2.15
   port: 3000
   protocol: http
-  secret: 4b69a51caf56bce8086207c9e634833c
+  secret: 011a54f3922298708bdf2677fcfb8829

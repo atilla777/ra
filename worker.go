@@ -30,11 +30,11 @@ func startNmap(job Job, i int) error {
 		time.Duration(viper.GetInt("ra.workers.timeout"))*time.Hour,
 	)
 	defer cancel()
-	options, err := jobOptions(job.Options, job.Id)
+	command, options, err := jobOptions(job.Options, job.Id)
 	if err != nil {
 		return err
 	}
-	cmd := exec.CommandContext(ctx, "sudo", options...)
+	cmd := exec.CommandContext(ctx, command, options...)
 	if _, err := cmd.CombinedOutput(); err != nil {
 		updateFailed(job.Id, job.Attempts)
 		return err
@@ -46,14 +46,24 @@ func startNmap(job Job, i int) error {
 	return updateFinished(job.Id)
 }
 
-func jobOptions(options string, id string) ([]string, error) {
+func jobOptions(options string, id string) (string, []string, error) {
+	var command string
+	var opt []string
+	var opt_str string
+	outputPath := getPath(id)
 	nmapPath, err := exec.LookPath("nmap")
 	if err != nil {
-		return nil, fmt.Errorf("Nmap path lookup error: %s", err)
+		return command, opt, fmt.Errorf("Nmap path lookup error: %s", err)
 	}
-	outputPath := getPath(id)
-	o := fmt.Sprintf("%s %s -oX %s", nmapPath, options, outputPath)
-	return strings.Split(o, " "), nil
+	//o = fmt.Sprintf("%s %s -oX %s", "/usr/bin/nmap", options, outputPath)
+	if viper.GetString("ra.mode") == "sudo" {
+		command = "/usr/bin/sudo"
+		opt_str = fmt.Sprintf("%s %s -oX %s", nmapPath, options, outputPath)
+	} else {
+		command = "/usr/bin/nmap"
+		opt_str = fmt.Sprintf("%s -oX %s", options, outputPath)
+	}
+	return command, strings.Split(opt_str, " "), nil
 }
 
 func getPath(id string) string {
